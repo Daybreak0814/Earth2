@@ -1,11 +1,12 @@
 // ==UserScript==
 // @name : Display RED ENERGY TRANSACTIONS
-// @version : 0.2.2
+// @version : 0.2.3
 // @description : Show the Red Energy records by date
 // @licence : MIT
 // @author : Daybreak★새벽
 // update : added cool time
 // update : added tiles purchased
+// update : utc -> kst
 
 (async function () {
 
@@ -40,7 +41,8 @@
             const { data } = await response.json();
 
             for (const transaction of data) {
-                const date = transaction.created.substring(0, 10);
+                // const date = transaction.created.substring(0, 10);
+                const date = new Date(Date.parse(transaction.created) + 9 * 60 * 60 * 1000).toISOString().substring(0, 10);
                 const amount = parseFloat(transaction.amount);
 
                 if (transactions[date]) {
