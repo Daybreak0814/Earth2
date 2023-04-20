@@ -130,8 +130,7 @@
         console.log(`\nAverage(4월 1일 이후) : ${averageAmount.toFixed(2)} RED ENERGY`);
         console.log(`Total Reward : ${totalAmount.toFixed(2)} RED ENERGY`);
         console.log(`Total Unlocked Land : ${reUnlockedAmount} RED ENERGY (${-reUnlockedAmount / 3} tiles)`);
-        console.log('\n*위의 날짜는 UTC 기준으로 알람창으로 보여지는 수치와 다를 수 있습니다.'
-            + '\n*RED ENERGY UNLOCKED LAND는 타일 구매로 사용한 레드 에너지입니다'
+        console.log('\n*RED ENERGY UNLOCKED LAND는 타일 구매로 사용한 레드 에너지입니다'
             + '\n스크립트 제작 : Daybreak★새벽');
 
     }
