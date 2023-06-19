@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name : Civilian Level Counter
-// @version : 0.1.1
-// @description : 레벨별 시빌리언 인원수를 알려줍니다
+// @version : 0.1.2
+// @description : 레벨별 시빌리언 인원수와 퍼센티지를 알려줍니다
 // @licence : MIT
 // @author : Daybreak★새벽 | 디스코드 : e2daybreak
 
@@ -60,9 +60,10 @@
                     await delay(30000);
                 }
             }
-            console.log('Data loading complete.\n\n[ Civilian Number by Level ]');
+            console.log('Data loading complete.\n\n[ Civilian Count and Percentage by Level ]');
             for (let level = 1; level <= 6; level++) {
-                console.log(`Level ${level} : ${civilianLevels[level]}`);
+                let percentage = (civilianLevels[level] / totalCivilians) * 100;
+                console.log(`Level ${level} : ${civilianLevels[level]} (${percentage.toFixed(2)}%)`);
             }
             console.log(`Total : ${totalCivilians}`);
             console.log('\n스크립트 작성 : Daybreak★새벽 | 문의 : 디스코드 e2daybreak');
