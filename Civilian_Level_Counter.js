@@ -1,111 +1,81 @@
 // ==UserScript==
-// @name : Raid Info Extractor
-// @version : 0.1.3
-// @description : 레이드 관련 알림 정보를 CSV파일로 추출합니다.
-// @licence : GPL 3.0
-// @author : Daybreak★새벽(존버방, 디스코드)
+// @name : Civilian Level Counter
+// @version : 0.1.2
+// @description : 레벨별 시빌리언 인원수와 퍼센티지를 알려줍니다
+// @licence : MIT
+// @author : Daybreak★새벽 | 디스코드 : e2daybreak
 
 
 (async function () {
 
-    async function getNotification() {
+    let civilianLevels = {
+        1: 0,
+        2: 0,
+        3: 0,
+        4: 0,
+        5: 0,
+        6: 0
+    };
+
+    let url = "https://r.earth2.io/civilians?page=1&q=&sortBy=name&sortDir=asc";
+
+    async function getCivilianData() {
         try {
-            let res = await fetch('https://app.earth2.io/api/v2/my/messages/?items=9999&limit=9999&message_class=NOTIFICATION&offset=0', {
+            let response = await fetch(url, {
                 "headers": {
-                    "accept": "application/json, text/plain, */*",
-                    "accept-language": "de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7",
-                    "if-none-match": "W/\"438bf420f0c924bf1d4785abddc1e1e6\"",
-                    "sec-ch-ua": "\" Not A;Brand\";v=\"99\", \"Chromium\";v=\"98\", \"Google Chrome\";v=\"98\"",
-                    "sec-ch-ua-mobile": "?0",
-                    "sec-ch-ua-platform": "\"Windows\"",
-                    "sec-fetch-dest": "empty",
-                    "sec-fetch-mode": "cors",
-                    "sec-fetch-site": "same-site",
                     "x-csrftoken": document.getElementsByName("csrfmiddlewaretoken")[0].value
                 },
-                "referrer": "https://app.earth2.io/",
-                "referrerPolicy": "strict-origin-when-cross-origin",
-                "method": "GET",
-                "mode": "cors",
                 "credentials": "include"
             });
-            res = await res.json();
-            return res;
+            let data = await response.json();
 
-        } catch (e) {
-            console.log(e);
-        };
-    };
+            let totalPages = data.meta.pages;
+            let totalCivilians = data.meta.count;
 
-    const raidLogs = [
-        ["DATE", "MY_PROPERTY", "RAID", "CYDROIDS", "E-THER", "OPPONENT_PROPERTY", "OPPONENT_USERNAME"],
-        ['스크립트 제작 : Daybreak★새벽']
-    ];
+            for (let i = 1; i <= totalPages; i++) {
+                console.log(`Loading page ${i} of ${totalPages}... %c[Advertise here]`, 'color:red');
+                let pageUrl = `https://r.earth2.io/civilians?page=${i}&q=&sortBy=name&sortDir=asc`;
+                let pageResponse = await fetch(pageUrl, {
+                    "headers": {
+                        "x-csrftoken": document.getElementsByName("csrfmiddlewaretoken")[0].value
+                    },
+                    "credentials": "include"
+                });
+                let pageData = await pageResponse.json();
 
-    const notiData = await getNotification();
-    let successfulCount = 0; // SUCCESSFUL 이벤트 개수
-    let totalCount = 0; // SUCCESSFUL + FAILED 이벤트 개수
+                for (let item of pageData.data) {
+                    let level = item.attributes.level;
 
+                    if (level >= 1 && level <= 6) {
+                        civilianLevels[level]++;
+                    }
+                }
 
-    let totalEther = 0; // 총 E-THER 합계
-    for (const result of notiData.results) {
-        if (result.event_type !== "DROID_RAID_SUCCESSFUL" && result.event_type !== "DROID_RAID_FAILED") {
-            continue;
+                if (i % 10 === 0) {
+                    await delay(1000);
+                }
+
+                if (i % 100 === 0) {
+                    console.log('[쿨타임] 30초 대기');
+                    await delay(30000);
+                }
+            }
+            console.log('Data loading complete.\n\n[ Civilian Count and Percentage by Level ]');
+            for (let level = 1; level <= 6; level++) {
+                let percentage = (civilianLevels[level] / totalCivilians) * 100;
+                console.log(`Level ${level} : ${civilianLevels[level]} (${percentage.toFixed(2)}%)`);
+            }
+            console.log(`Total : ${totalCivilians}`);
+            console.log('\n스크립트 작성 : Daybreak★새벽 | 문의 : 디스코드 e2daybreak');
+            console.log('스크립트/데이터/마켓정보 구독 https://petreon.com/e2daybreak');
+        } catch (err) {
+            console.error(err);
         }
-        const data = result.data;
-        const opponent = data.victim;
-        const home = data.homeLandfield;
-        const enemy = data.enemyLandfield;
-        let date = result.created.split('.')[0];
-        date = new Date(result.created).toLocaleString("ko-KR", { timeZone: "Asia/Seoul" });
+    }
 
+    getCivilianData();
 
-        const etherAmount = parseFloat(data.etherAmount); // E-THER 양
-        if (!isNaN(etherAmount)) { // E-THER 값이 올바른 경우에만 총 E-THER 합계 계산
-            totalEther += etherAmount; // 총 E-THER 합계 업데이트
-        }
-
-        raidLogs.push([
-            date,
-            `"${home.description}"`,
-            result.event_type === "DROID_RAID_SUCCESSFUL" ? "SUCCESSFUL" : "FAILED",
-            data.droidsCount,
-            data.etherAmount,
-            `"${enemy.description}"`,
-            opponent.username
-        ]);
-        if (result.event_type === "DROID_RAID_SUCCESSFUL") {
-            successfulCount += 1;
-        }
-        totalCount += 1;
-    };
-
-    raidLogs.push(['Total', '', '', '', totalEther.toFixed(2), '', '']);
-    const successRate = totalCount > 0 ? (successfulCount / totalCount * 100).toFixed(2) + '%' : 'N/A'; // 승률 계산
-    raidLogs.push(['Winning Rate', '', successRate, '', '', '', '']); // A열 가장 아랫줄에 '승률' 추가, E열 가장 아랫줄에 승률 표시
-    raidLogs.push([]);
-    raidLogs.push(['스크립트/데이터/마켓정보 구독']);
-    raidLogs.push(['https://petreon.com/e2daybreak']);
-
-
-    const today = new Date().toLocaleString("ko-KR", { timeZone: "Asia/Seoul" });
-
-    const filename = `Raid${today}.csv`;
-
-    // CSV 변환, 다운로드
-    const csvString = raidLogs.map(row => row.join(',')).join('\n');
-    const blob = new Blob(['\uFEFF' + csvString], { type: 'text/csv;charset=utf-8;' });
-
-    const downloadLink = document.createElement("a");
-    const url = URL.createObjectURL(blob);
-    downloadLink.href = url;
-    downloadLink.download = filename;
-    document.body.appendChild(downloadLink);
-    downloadLink.click();
-    document.body.removeChild(downloadLink);
-    URL.revokeObjectURL(url);
-
-    console.log("다운로드 완료");
-
-
+    function delay(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
 })();
