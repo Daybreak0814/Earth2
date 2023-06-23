@@ -2,4 +2,4 @@
 
 더 많은 스크립트는 아래 링크에 업로드됩니다.
 
-스크립트/데이터/마켓정보/전략 구독 https://patreon.com/e2daybreak
+스크립트/통계/마켓데이터/전략 구독 https://patreon.com/e2daybreak
