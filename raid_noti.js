@@ -83,8 +83,10 @@
     raidLogs.push(['Total', '', '', '', totalEther.toFixed(2), '', '']);
     const successRate = totalCount > 0 ? (successfulCount / totalCount * 100).toFixed(2) + '%' : 'N/A'; // 승률 계산
     raidLogs.push(['Winning Rate', '', successRate, '', '', '', '']); // A열 가장 아랫줄에 '승률' 추가, E열 가장 아랫줄에 승률 표시
-    raidLogs.push(['바이낸스 가입하고 코인 받기']);
-    raidLogs.push(['https://bit.ly/daybreak_vip']);
+    raidLogs.push([]);
+    raidLogs.push(['스크립트/데이터/마켓정보 구독']);
+    raidLogs.push(['https://petreon.com/e2daybreak']);
+
 
     const today = new Date().toLocaleString("ko-KR", { timeZone: "Asia/Seoul" });
 
@@ -104,5 +106,6 @@
     URL.revokeObjectURL(url);
 
     console.log("다운로드 완료");
+
 
 })();
