@@ -85,7 +85,7 @@
     raidLogs.push(['Winning Rate', '', successRate, '', '', '', '']); // A열 가장 아랫줄에 '승률' 추가, E열 가장 아랫줄에 승률 표시
     raidLogs.push([]);
     raidLogs.push(['스크립트/데이터/마켓정보 구독']);
-    raidLogs.push(['https://petreon.com/e2daybreak']);
+    raidLogs.push(['https://patreon.com/e2daybreak']);
 
 
     const today = new Date().toLocaleString("ko-KR", { timeZone: "Asia/Seoul" });
