@@ -67,7 +67,7 @@
             }
             console.log(`Total : ${totalCivilians}`);
             console.log('\n스크립트 작성 : Daybreak★새벽 | 문의 : 디스코드 e2daybreak');
-            console.log('바이낸스 가입 이벤트 https://bit.ly/daybreak_vip');
+            console.log('스크립트/데이터/마켓정보 구독 https://petreon.com/e2daybreak');
         } catch (err) {
             console.error(err);
         }
