@@ -13,14 +13,6 @@
             let res = await fetch('https://app.earth2.io/api/v2/my/messages/?items=9999&limit=9999&message_class=NOTIFICATION&offset=0', {
                 "headers": {
                     "accept": "application/json, text/plain, */*",
-                    "accept-language": "de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7",
-                    "if-none-match": "W/\"438bf420f0c924bf1d4785abddc1e1e6\"",
-                    "sec-ch-ua": "\" Not A;Brand\";v=\"99\", \"Chromium\";v=\"98\", \"Google Chrome\";v=\"98\"",
-                    "sec-ch-ua-mobile": "?0",
-                    "sec-ch-ua-platform": "\"Windows\"",
-                    "sec-fetch-dest": "empty",
-                    "sec-fetch-mode": "cors",
-                    "sec-fetch-site": "same-site",
                     "x-csrftoken": document.getElementsByName("csrfmiddlewaretoken")[0].value
                 },
                 "referrer": "https://app.earth2.io/",
